@@ -393,6 +393,9 @@ Section Cross References
     system_stm32f4xx.o(.text.SystemCoreClockUpdate) refers to system_stm32f4xx.o(.data.SystemCoreClock) for SystemCoreClock
     system_stm32f4xx.o(.text.SystemCoreClockUpdate) refers to system_stm32f4xx.o(.rodata.AHBPrescTable) for AHBPrescTable
     system_stm32f4xx.o(.ARM.exidx.text.SystemCoreClockUpdate) refers to system_stm32f4xx.o(.text.SystemCoreClockUpdate) for [Anonymous Symbol]
+    ad_da.o(.ARM.exidx.text.decode_nrz) refers to ad_da.o(.text.decode_nrz) for [Anonymous Symbol]
+    ad_da.o(.ARM.exidx.text.decode_rz) refers to ad_da.o(.text.decode_rz) for [Anonymous Symbol]
+    ad_da.o(.ARM.exidx.text.detect_preamble) refers to ad_da.o(.text.detect_preamble) for [Anonymous Symbol]
     basicmathfunctions.o(.ARM.exidx.text.arm_abs_f32) refers to basicmathfunctions.o(.text.arm_abs_f32) for [Anonymous Symbol]
     basicmathfunctions.o(.ARM.exidx.text.arm_abs_f64) refers to basicmathfunctions.o(.text.arm_abs_f64) for [Anonymous Symbol]
     basicmathfunctions.o(.ARM.exidx.text.arm_abs_q15) refers to basicmathfunctions.o(.text.arm_abs_q15) for [Anonymous Symbol]
@@ -3082,6 +3085,13 @@ Removing Unused input sections from the image.
     Removing system_stm32f4xx.o(.ARM.exidx.text.SystemInit), (8 bytes).
     Removing system_stm32f4xx.o(.text.SystemCoreClockUpdate), (134 bytes).
     Removing system_stm32f4xx.o(.ARM.exidx.text.SystemCoreClockUpdate), (8 bytes).
+    Removing ad_da.o(.text), (0 bytes).
+    Removing ad_da.o(.text.decode_nrz), (434 bytes).
+    Removing ad_da.o(.ARM.exidx.text.decode_nrz), (8 bytes).
+    Removing ad_da.o(.text.decode_rz), (194 bytes).
+    Removing ad_da.o(.ARM.exidx.text.decode_rz), (8 bytes).
+    Removing ad_da.o(.text.detect_preamble), (144 bytes).
+    Removing ad_da.o(.ARM.exidx.text.detect_preamble), (8 bytes).
     Removing basicmathfunctions.o(.text), (0 bytes).
     Removing basicmathfunctions.o(.text.arm_abs_f32), (158 bytes).
     Removing basicmathfunctions.o(.ARM.exidx.text.arm_abs_f32), (8 bytes).
@@ -4907,7 +4917,7 @@ Removing Unused input sections from the image.
     Removing cdrcmple.o(.text), (48 bytes).
     Removing fpstat.o(.text), (4 bytes).
 
-2251 unused section(s) (total 1449884 bytes) removed from the image.
+2258 unused section(s) (total 1450680 bytes) removed from the image.
 
 ==============================================================================
 
@@ -4983,6 +4993,7 @@ Image Symbol Table
     ../mathlib/sin_i.c                       0x00000000   Number         0  sin_i.o ABSOLUTE
     ../mathlib/sqrt.c                        0x00000000   Number         0  sqrt.o ABSOLUTE
     ../mathlib/tanhf.c                       0x00000000   Number         0  tanhf.o ABSOLUTE
+    AD_DA.c                                  0x00000000   Number         0  ad_da.o ABSOLUTE
     BasicMathFunctions.c                     0x00000000   Number         0  basicmathfunctions.o ABSOLUTE
     BasicMathFunctionsF16.c                  0x00000000   Number         0  basicmathfunctionsf16.o ABSOLUTE
     BayesFunctions.c                         0x00000000   Number         0  bayesfunctions.o ABSOLUTE
@@ -5284,21 +5295,21 @@ Memory Map of the image
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x08000000   0x08000000   0x00000188   Data   RO            3    RESET               startup_stm32f407xx.o
-    0x08000188   0x08000188   0x00000000   Code   RO         2668  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x08000188   0x08000188   0x00000004   Code   RO         2762    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x0800018c   0x0800018c   0x00000004   Code   RO         2765    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x08000190   0x08000190   0x00000000   Code   RO         2767    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x08000190   0x08000190   0x00000000   Code   RO         2769    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x08000190   0x08000190   0x00000008   Code   RO         2770    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x08000198   0x08000198   0x00000000   Code   RO         2772    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x08000198   0x08000198   0x00000000   Code   RO         2774    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x08000198   0x08000198   0x00000004   Code   RO         2763    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x08000188   0x08000188   0x00000000   Code   RO         2682  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x08000188   0x08000188   0x00000004   Code   RO         2776    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x0800018c   0x0800018c   0x00000004   Code   RO         2779    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x08000190   0x08000190   0x00000000   Code   RO         2781    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x08000190   0x08000190   0x00000000   Code   RO         2783    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x08000190   0x08000190   0x00000008   Code   RO         2784    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x08000198   0x08000198   0x00000000   Code   RO         2786    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x08000198   0x08000198   0x00000000   Code   RO         2788    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x08000198   0x08000198   0x00000004   Code   RO         2777    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x0800019c   0x0800019c   0x00000024   Code   RO            4    .text               startup_stm32f407xx.o
-    0x080001c0   0x080001c0   0x00000062   Code   RO         2675    .text               mc_w.l(uldiv.o)
-    0x08000222   0x08000222   0x00000024   Code   RO         2681    .text               mc_w.l(memseta.o)
-    0x08000246   0x08000246   0x0000001e   Code   RO         2777    .text               mc_w.l(llshl.o)
-    0x08000264   0x08000264   0x00000020   Code   RO         2779    .text               mc_w.l(llushr.o)
-    0x08000284   0x08000284   0x00000030   Code   RO         2811    .text               mc_w.l(init.o)
+    0x080001c0   0x080001c0   0x00000062   Code   RO         2689    .text               mc_w.l(uldiv.o)
+    0x08000222   0x08000222   0x00000024   Code   RO         2695    .text               mc_w.l(memseta.o)
+    0x08000246   0x08000246   0x0000001e   Code   RO         2791    .text               mc_w.l(llshl.o)
+    0x08000264   0x08000264   0x00000020   Code   RO         2793    .text               mc_w.l(llushr.o)
+    0x08000284   0x08000284   0x00000030   Code   RO         2825    .text               mc_w.l(init.o)
     0x080002b4   0x080002b4   0x00000002   Code   RO           57    .text.BusFault_Handler  stm32f4xx_it.o
     0x080002b6   0x080002b6   0x00000002   PAD
     0x080002b8   0x080002b8   0x00000002   Code   RO           63    .text.DebugMon_Handler  stm32f4xx_it.o
@@ -5353,21 +5364,21 @@ Memory Map of the image
     0x0800107e   0x0800107e   0x00000002   PAD
     0x08001080   0x08001080   0x00000024   Code   RO           17    .text.fputc         main.o
     0x080010a4   0x080010a4   0x00000028   Code   RO           11    .text.main          main.o
-    0x080010cc   0x080010cc   0x0000000e   Code   RO         2815    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x080010da   0x080010da   0x00000002   Code   RO         2816    i.__scatterload_null  mc_w.l(handlers.o)
-    0x080010dc   0x080010dc   0x0000000e   Code   RO         2817    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x080010cc   0x080010cc   0x0000000e   Code   RO         2829    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x080010da   0x080010da   0x00000002   Code   RO         2830    i.__scatterload_null  mc_w.l(handlers.o)
+    0x080010dc   0x080010dc   0x0000000e   Code   RO         2831    i.__scatterload_zeroinit  mc_w.l(handlers.o)
     0x080010ea   0x080010ea   0x00000002   PAD
-    0x080010ec   0x080010ec   0x00000024   Code   RO         2671    i.puts              mc_w.l(puts.o)
+    0x080010ec   0x080010ec   0x00000024   Code   RO         2685    i.puts              mc_w.l(puts.o)
     0x08001110   0x08001110   0x00000010   Data   RO          596    .rodata.AHBPrescTable  system_stm32f4xx.o
     0x08001120   0x08001120   0x00000008   Data   RO          597    .rodata.APBPrescTable  system_stm32f4xx.o
-    0x08001128   0x08001128   0x00000020   Data   RO         2814    Region$$Table       anon$$obj.o
+    0x08001128   0x08001128   0x00000020   Data   RO         2828    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08001148, Size: 0x00002060, Max: 0x0001c000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08001148   0x00000004   Data   RW         2776    .data               mc_w.l(stdout.o)
+    0x20000000   0x08001148   0x00000004   Data   RW         2790    .data               mc_w.l(stdout.o)
     0x20000004   0x0800114c   0x00000008   Data   RW          556    .data..L_MergedGlobals  stm32f4xx_hal.o
     0x2000000c   0x08001154   0x00000004   Data   RW          595    .data.SystemCoreClock  system_stm32f4xx.o
     0x20000010        -       0x00000048   Zero   RW           42    .bss.huart1         usart.o
