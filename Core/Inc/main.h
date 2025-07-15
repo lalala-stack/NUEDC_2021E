@@ -64,6 +64,9 @@ extern volatile uint32_t last_valid_time;
 #define ADC_BUFSIZE 1024
 
 #define TIMEOUT_MS 5000    
+
+
+void set_dac_voltage(float voltage);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

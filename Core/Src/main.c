@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "dac.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -96,10 +97,14 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM5_Init();
   MX_TIM2_Init();
+  MX_DAC_Init();
   /* USER CODE BEGIN 2 */
   //lcd_init();
   HAL_TIM_Base_Start_IT( &htim5 );
   HAL_TIM_Base_Start( &htim2 );  
+  HAL_DAC_Start(&hdac , DAC_CHANNEL_1);
+  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
+  HAL_DAC_Start(&hdac , DAC_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -180,11 +185,27 @@ int fputc(int ch,FILE *f)
   return ch;
 }
 
+
+void set_dac_voltage(float voltage)
+{
+    /* STM32F4 DAC 为 3.3V 参考电压 */
+    float vref = 3.3f; 
+    uint32_t resolution = 4095; // 12 位 DAC (0-4095)
+    
+    // 计算 DAC 值
+    uint32_t dac_value = (uint32_t)((voltage / vref) * resolution);
+    
+    // 限幅保护 (0-4095)
+    if(dac_value > resolution) dac_value = resolution;
+    
+    // 设置 DAC 输出
+    HAL_DAC_SetValue(&hdac, 1, DAC_ALIGN_12B_R, dac_value);
+}
 /* USER CODE END 4 */
 
 /**
   * @brief  Period elapsed callback in non blocking mode
-  * @note   This function is called  when TIM6 interrupt took place, inside
+  * @note   This function is called  when TIM10 interrupt took place, inside
   * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
   * a global variable "uwTick" used as application time base.
   * @param  htim : TIM handle
@@ -195,7 +216,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 0 */
 
   /* USER CODE END Callback 0 */
-  if (htim->Instance == TIM6)
+  if (htim->Instance == TIM10)
   {
     HAL_IncTick();
   }

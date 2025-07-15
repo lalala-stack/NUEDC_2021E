@@ -59,7 +59,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t LEDTaskHandle;
 const osThreadAttr_t LEDTask_attributes = {
   .name = "LEDTask",
-  .stack_size = 256 * 4,
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for myTask03 */
@@ -161,12 +161,12 @@ void StartTask02(void *argument)
   {
 	current_time = osKernelGetTickCount();
     
-    // 检查超时：当前时间 - 最后有效时间 > 5秒
+    // 
     if ((current_time - last_valid_time) > TIMEOUT_MS) {
-        // 超时熄灭数码管
-        TM1637_display(21, 21, 21, 21, 0);  // 显示全灭
+        //
+        TM1637_display(21, 21, 21, 21, 0);  // 锟斤拷示全锟斤拷
     } else {
-        // 正常显示数据
+        //
         TM1637_display(mapped[0], mapped[1], mapped[2], mapped[3], 0);
     }
 	
