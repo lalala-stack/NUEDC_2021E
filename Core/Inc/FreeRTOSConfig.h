@@ -83,9 +83,9 @@
 #define configMESSAGE_BUFFER_LENGTH_TYPE         size_t
 
 
-/* ╫ШсцкЫсп╦Звы╧╕дэ */
+/* О©╫О©╫О©╫О©╫О©╫О©╫О©╫п╦О©╫О©╫ы╧О©╫О©╫О©╫ */
 
-/* отй╫╤╗рЕ©у╦Звы╨Й */
+/* О©╫О©╫й╫О©╫О©╫О©╫О©╫у╦О©╫О©╫ы╨О©╫ */
 #define traceISR_ENTER() 
 #define traceISR_EXIT() 
 #define traceISR_EXIT_TO_SCHEDULER()

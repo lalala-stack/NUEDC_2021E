@@ -97,12 +97,9 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  LED[0] = 0;
-  LED[1] = 3;
-  LED[2] = 3;
-  LED[3] = 3;
-    
   //lcd_init();
+  HAL_TIM_Base_Start_IT( &htim5 );
+  HAL_TIM_Base_Start( &htim2 );  
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -120,7 +117,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	 LED4_Display();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

@@ -144,7 +144,7 @@ uint16_t detect_preamble(const uint8_t* decoded_data, uint16_t length,const uint
 // 处理每位数据的函数（在接收中断或主循环中调用）
 void process_bit(uint8_t current_bit) {
     switch (state) {
-        // 状态1：检测同步头 00111100 (0x3C)
+        // 状态1：检测帧头 00111100 (0x3C)
         case WAITING_FOR_SYNC:
             sync_shift_reg = (sync_shift_reg << 1) | current_bit; // 左移新位
             if (sync_shift_reg == 0x3C) { // 匹配0x3C (00111100)
@@ -177,10 +177,7 @@ void process_bit(uint8_t current_bit) {
                     if (mapped[i] == 0xFF) valid = 0;
                 }
                 
-                if (valid) {
-                    // 有效数据：mapped[0]-mapped[3]包含转换后的值
-                    // 在此处处理数据（如存入数组或发送）
-                }
+
                 // 重置状态，继续检测下一帧
                 state = WAITING_FOR_SYNC;
                 sync_shift_reg = 0;

@@ -32,10 +32,6 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
-uint8_t num0 = 0;
-uint8_t num1 = 0;
-uint8_t num2 = 0;
-uint8_t num3 = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -63,7 +59,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t LEDTaskHandle;
 const osThreadAttr_t LEDTask_attributes = {
   .name = "LEDTask",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for myTask03 */
@@ -162,12 +158,9 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-	LED[0] = mapped[0];
-	LED[1] = mapped[1];
-	LED[2] = mapped[2];
-	LED[3] = mapped[3];
-	LED4_Display();
-    //osDelay(1);
+	  TM1637_display( mapped[0],mapped[1],mapped[2],mapped[3],0 );
+	
+////    osDelay(1);
   }
   /* USER CODE END StartTask02 */
 }

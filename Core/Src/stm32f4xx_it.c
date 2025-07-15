@@ -22,6 +22,7 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "stdio.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -170,12 +171,12 @@ void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
   freq = TIM2->CNT;
-  if( freq == last_freq ) {
+  if( freq == last_freq && freq!=0 ) {
 	  if(freq > 260) signal_flag = 1;
 	  else if( freq < 200 ) signal_flag = 0;
 	  tim2_ready = 1;
   }
-	  
+  printf(  "%d\n " , signal_flag  );
   last_freq = freq;
   
   TIM2->CNT = 0;

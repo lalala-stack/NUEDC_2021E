@@ -1,92 +1,145 @@
 #include "TIM1637.h"
- 
- unsigned char fseg[]={0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90};
- unsigned char segbit[]={0x80,0x40,0x20,0x10,0x08,0x04,0x02,0x01};
- unsigned char  disbuf[4]={0,0,0,0};
-
-
- //-----------------------------------------------------------------------------
-// 函数原形定义
-#define uchar unsigned char
-
-
-
-
-unsigned char LED_0F[];		// LED字模表
-
-
-//-----------------------------------------------------------------------------
-// 全局变量
-unsigned char LED[8];	//用于LED的8位显示缓存
-
-
-//*****************************************************************************
-// 主程序
-//
-
-
-void LED4_Display (void)
+unsigned char tab[] =
 {
-	unsigned char *led_table;          // 查表指针
-	unsigned char i;
-	//显示第1位
-	led_table = LED_0F + LED[0];
-	i = *led_table;
-	//i=LED_0F[LED[0]];
-	LED_OUT(i);			
-	LED_OUT(0x01);		
+	0x3F,/*0*/
+	0x06,/*1*/
+	0x5B,/*2*/
+	0x4F,/*3*/
+	0x66,/*4*/
+	0x6D,/*5*/
+	0x7D,/*6*/
+	0x07,/*7*/
+	0x7F,/*8*/
+	0x6F,/*9*/
+	0x77,/*10 A*/
+	0x7C,/*11 b*/
+	0x58,/*12 c*/
+	0x5E,/*13 d*/
+	0x79,/*14 E*/
+	0x71,/*15 F*/
+	0x76,/*16 H*/
+	0x38,/*17 L*/
+	0x54,/*18 n*/
+	0x73,/*19 P*/
+	0x3E,/*20 U*/
+	0x00,/*21 黑屏*/
+};
+void TM1637_WriteBit(unsigned char mBit)
+{
+	CLK_0;
+	delay_us(140);
 
-	RCLK_0;
+	if(mBit)
+		DIO_1;
+	else
+		DIO_0;
+ 
+	delay_us(140);
+	CLK_1;
+	delay_us(140);	
+} 
+void TM1637_WriteByte(unsigned char Byte)
+{
+	char loop = 0;
+	for(loop = 0;loop<8;loop++)
+	{
+		TM1637_WriteBit((Byte>>loop) & 0x01);//?èD′μí??	
+	}
+	CLK_0;
+	delay_us(140);
+	DIO_1;	
+	delay_us(140);
+	CLK_1;		
+	delay_us(140);
+	while(HAL_GPIO_ReadPin(TM_DIO_CLK_GPIO_Port,TM_DIO_CLK_Pin) == 0x01);
+}
+void TM1637_start(void)
+{
+	 CLK_1;
+	 DIO_1;
+	 delay_us(2);
+	 DIO_0;
+}
+void TM1637_ack(void)
+{
+	uint8_t i;
+	CLK_0;
+	delay_us(5);
+
+	while(HAL_GPIO_ReadPin(TM_DIO_CLK_GPIO_Port,TM_DIO_CLK_Pin) == 0x01&&(i<250))
+		i++;
 	
-	RCLK_1;
-	//显示第2位
-	led_table = LED_0F + LED[1];
-	i = *led_table;
-
-	LED_OUT(i);
-	LED_OUT(0x02);		
-
-	RCLK_0;
+	CLK_1;
 	
-	RCLK_1;
-	//显示第3位
-	led_table = LED_0F + LED[2];
-	i = *led_table;
-
-	LED_OUT(i);			
-	LED_OUT(0x04);	
-
-	RCLK_0;
+	delay_us(2);
 	
-	RCLK_1;
-	//显示第4位
-	led_table = LED_0F + LED[3];
-	i = *led_table;
-
-	LED_OUT(i);			
-	LED_OUT(0x08);		
-
-	RCLK_0;
-	
-	RCLK_1;
+	CLK_0;
+}
+void TM1637_stop(void)
+{
+	 CLK_0;
+	 delay_us(2);
+	 DIO_0;
+	 delay_us(2);
+	 CLK_1;
+	 delay_us(2);
+	 DIO_1;
+	 delay_us(2);
 }
 
-void LED_OUT(char X)
+void TM1637_Write(unsigned char DATA)   
 {
-	char i;
-	for(i=8;i>=1;i--)
+	unsigned char i;   
+	for(i=0;i<8;i++)        
 	{
-		if (X&0x80) DIO_1; else DIO_0;
-		X<<=1;
-		SCLK_0;
-		SCLK_1;
+		CLK_0;     
+		if(DATA & 0x01)
+			DIO_1;
+		else 
+			DIO_0;
+		
+		delay_us(3);
+		
+		DATA=DATA>>1;      
+		CLK_1;
+		
+		delay_us(3);
 	}
 }
-
-unsigned char LED_0F[] = 
-{// 0	 1	  2	   3	4	 5	  6	   7	8	 9	  A	   b	C    d	  E    F    -
-	0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0x8C,0xBF,0xC6,0xA1,0x86,0xFF,0xbf
-};
-
-
-
+void TM1637_display(uint8_t a,uint8_t b,uint8_t c,uint8_t d,uint8_t h)
+{
+	TM1637_start();
+	TM1637_Write(0x40);
+	TM1637_ack();
+	TM1637_stop();
+	
+	TM1637_start();
+	
+	TM1637_Write(0xc0);
+	TM1637_ack();
+	
+	TM1637_Write(tab[a]);
+	TM1637_ack();
+	
+	TM1637_Write(tab[b]|h<<7);
+	TM1637_ack();
+	
+	TM1637_Write(tab[c]);
+	TM1637_ack();
+	
+	TM1637_Write(tab[d]);
+	TM1637_ack();
+	
+	TM1637_stop();
+	
+	TM1637_start();
+	TM1637_Write(0x8F);
+	TM1637_ack();
+	TM1637_stop();
+}
+void delay_us(int i)
+{
+		for (;i>0;i--)
+			for(int j=0;j<167;j++)
+				for(int z= 0; z<10;z++);
+}
