@@ -130,3 +130,4 @@ uint16_t detect_preamble(const uint8_t* decoded_data, uint16_t length,const uint
     
     return PREAMBLE_NOT_FOUND;  // 未找到符合条件的包头
 }
+

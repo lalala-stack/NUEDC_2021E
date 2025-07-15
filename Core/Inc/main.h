@@ -53,13 +53,13 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+extern uint8_t signal_flag;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
-
+#define ADC_BUFSIZE 1024
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
