@@ -25,12 +25,17 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "TIM1637.h"
+#include "AD_DA.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 
+uint8_t num0 = 0;
+uint8_t num1 = 0;
+uint8_t num2 = 0;
+uint8_t num3 = 0;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -157,7 +162,12 @@ void StartTask02(void *argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1);
+	LED[0] = mapped[0];
+	LED[1] = mapped[1];
+	LED[2] = mapped[2];
+	LED[3] = mapped[3];
+	LED4_Display();
+    //osDelay(1);
   }
   /* USER CODE END StartTask02 */
 }
@@ -175,6 +185,10 @@ void StartTask03(void *argument)
   /* Infinite loop */
   for(;;)
   {
+	if( tim2_ready ){
+		process_bit(signal_flag);
+		tim2_ready = 0;
+	}
     osDelay(1);
   }
   /* USER CODE END StartTask03 */

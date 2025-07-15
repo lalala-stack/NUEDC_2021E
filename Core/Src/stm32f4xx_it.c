@@ -44,6 +44,7 @@
 uint32_t last_freq = 0;
 uint32_t freq = 0;
 uint8_t signal_flag = 0;
+uint8_t tim2_ready = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -172,6 +173,7 @@ void TIM5_IRQHandler(void)
   if( freq == last_freq ) {
 	  if(freq > 260) signal_flag = 1;
 	  else if( freq < 200 ) signal_flag = 0;
+	  tim2_ready = 1;
   }
 	  
   last_freq = freq;

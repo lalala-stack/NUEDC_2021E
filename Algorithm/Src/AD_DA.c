@@ -1,5 +1,15 @@
 #include "AD_DA.h"
 
+uint8_t mapped[4];
+
+// 全局变量
+uint8_t state = WAITING_FOR_SYNC;  // 初始状态
+uint8_t sync_shift_reg = 0;        // 同步头移位寄存器（8位）
+uint16_t data_buffer = 0;          // 目标数据缓冲区（16位）
+uint8_t bit_counter = 0;           // 目标数据位计数器
+
+
+
 /**
  * @brief 解码非归零码（支持NRZ和NRZI编码）
  * @param samples[]: 采样数据数组（ADC量化值，范围0-4095对应电压0-3.3V）
@@ -130,4 +140,53 @@ uint16_t detect_preamble(const uint8_t* decoded_data, uint16_t length,const uint
     
     return PREAMBLE_NOT_FOUND;  // 未找到符合条件的包头
 }
+
+// 处理每位数据的函数（在接收中断或主循环中调用）
+void process_bit(uint8_t current_bit) {
+    switch (state) {
+        // 状态1：检测同步头 00111100 (0x3C)
+        case WAITING_FOR_SYNC:
+            sync_shift_reg = (sync_shift_reg << 1) | current_bit; // 左移新位
+            if (sync_shift_reg == 0x3C) { // 匹配0x3C (00111100)
+                state = RECEIVING_DATA;
+                bit_counter = 16;   // 准备接收16位数据
+                data_buffer = 0;    // 清空数据缓冲区
+            }
+            break;
+
+        // 状态2：接收目标数据
+        case RECEIVING_DATA:
+            data_buffer = (data_buffer << 1) | current_bit; // 移入新位
+            bit_counter--;
+            
+            if (bit_counter == 0) { // 已接收16位
+                // 目标数据已就绪：data_buffer
+				// 拆分并映射4个4位组
+                uint8_t nibbles[4] = {
+                    (data_buffer >> 12) & 0x0F, // 最高4位
+                    (data_buffer >> 8)  & 0x0F,
+                    (data_buffer >> 4)  & 0x0F,
+                    data_buffer        & 0x0F  // 最低4位
+                };
+                
+                uint8_t valid = 1;
+                
+                // 应用映射规则
+                for (uint8_t i = 0; i < 4; i++) {
+                    mapped[i] = NIBBLE_MAP[nibbles[i]];
+                    if (mapped[i] == 0xFF) valid = 0;
+                }
+                
+                if (valid) {
+                    // 有效数据：mapped[0]-mapped[3]包含转换后的值
+                    // 在此处处理数据（如存入数组或发送）
+                }
+                // 重置状态，继续检测下一帧
+                state = WAITING_FOR_SYNC;
+                sync_shift_reg = 0;
+            }
+            break;
+    }
+}
+
 

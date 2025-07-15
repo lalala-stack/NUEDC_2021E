@@ -54,6 +54,7 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 extern uint8_t signal_flag;
+extern uint8_t tim2_ready;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
