@@ -55,12 +55,15 @@ void Error_Handler(void);
 /* USER CODE BEGIN EFP */
 extern uint8_t signal_flag;
 extern uint8_t tim2_ready;
+extern volatile uint32_t last_valid_time;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 
 /* USER CODE BEGIN Private defines */
 #define ADC_BUFSIZE 1024
+
+#define TIMEOUT_MS 5000    
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

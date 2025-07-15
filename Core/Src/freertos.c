@@ -46,7 +46,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+volatile uint32_t last_valid_time = 0; 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -155,10 +155,20 @@ void StartDefaultTask(void *argument)
 void StartTask02(void *argument)
 {
   /* USER CODE BEGIN StartTask02 */
+  uint32_t current_time;
   /* Infinite loop */
   for(;;)
   {
-	  TM1637_display( mapped[0],mapped[1],mapped[2],mapped[3],0 );
+	current_time = osKernelGetTickCount();
+    
+    // 检查超时：当前时间 - 最后有效时间 > 5秒
+    if ((current_time - last_valid_time) > TIMEOUT_MS) {
+        // 超时熄灭数码管
+        TM1637_display(21, 21, 21, 21, 0);  // 显示全灭
+    } else {
+        // 正常显示数据
+        TM1637_display(mapped[0], mapped[1], mapped[2], mapped[3], 0);
+    }
 	
 ////    osDelay(1);
   }
@@ -179,6 +189,7 @@ void StartTask03(void *argument)
   for(;;)
   {
 	if( tim2_ready ){
+		last_valid_time = osKernelGetTickCount();
 		process_bit(signal_flag);
 		tim2_ready = 0;
 	}
