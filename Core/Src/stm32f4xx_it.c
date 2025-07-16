@@ -187,9 +187,10 @@ void TIM1_UP_TIM10_IRQHandler(void)
 void TIM5_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM5_IRQn 0 */
+	
   freq = TIM2->CNT;
-  if( freq == last_freq && freq!=0 ) {
-	  if(freq > 260) signal_flag = 1;
+  if( freq - last_freq < 3 && freq > 3 ) {
+	  if(freq >= 200) signal_flag = 1;
 	  else if( freq < 200 ) signal_flag = 0;
 	  tim2_ready = 1;
   }
