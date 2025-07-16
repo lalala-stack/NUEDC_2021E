@@ -57,6 +57,7 @@ void SystemClock_Config(void);
 void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
+void set_dac_voltage(float voltage);
 
 /* USER CODE END PFP */
 
@@ -98,13 +99,17 @@ int main(void)
   MX_TIM5_Init();
   MX_TIM2_Init();
   MX_DAC_Init();
+  MX_TIM1_Init();
+  MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
   //lcd_init();
   HAL_TIM_Base_Start_IT( &htim5 );
   HAL_TIM_Base_Start( &htim2 );  
   HAL_DAC_Start(&hdac , DAC_CHANNEL_1);
-  HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, 0);
-  HAL_DAC_Start(&hdac , DAC_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
   /* USER CODE END 2 */
 
   /* Init scheduler */
@@ -199,7 +204,7 @@ void set_dac_voltage(float voltage)
     if(dac_value > resolution) dac_value = resolution;
     
     // 设置 DAC 输出
-    HAL_DAC_SetValue(&hdac, 1, DAC_ALIGN_12B_R, dac_value);
+    HAL_DAC_SetValue(&hdac, DAC_CHANNEL_1, DAC_ALIGN_12B_R, dac_value);
 }
 /* USER CODE END 4 */
 
