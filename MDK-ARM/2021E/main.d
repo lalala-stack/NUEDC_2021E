@@ -39,4 +39,5 @@
   ..\Middlewares\Third_Party\FreeRTOS\Source\include\list.h \
   ..\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS_V2\cmsis_os2.h \
   ..\Core\Inc\dac.h ..\Core\Inc\tim.h ..\Core\Inc\usart.h \
-  ..\Core\Inc\gpio.h ..\Hardware\Inc\lcd.h ..\Hardware\Inc\TIM1637.h
+  ..\Core\Inc\gpio.h ..\Hardware\Inc\lcd.h ..\Hardware\Inc\TIM1637.h \
+  ..\Hardware\Inc\TLV56XX_V1.h

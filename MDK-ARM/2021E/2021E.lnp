@@ -33,6 +33,7 @@
 "2021e\ad_da.o"
 "2021e\lcd.o"
 "2021e\tim1637.o"
+"2021e\tlv56xx_v1.o"
 "2021e\croutine.o"
 "2021e\event_groups.o"
 "2021e\list.o"

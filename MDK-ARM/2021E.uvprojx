@@ -982,6 +982,11 @@
               <FileType>1</FileType>
               <FilePath>..\Hardware\Src\TIM1637.c</FilePath>
             </File>
+            <File>
+              <FileName>TLV56XX_V1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Hardware\Src\TLV56XX_V1.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

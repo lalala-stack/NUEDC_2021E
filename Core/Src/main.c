@@ -29,6 +29,7 @@
 #include "stdio.h"
 #include "lcd.h"
 #include "TIM1637.h"
+#include "TLV56XX_V1.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,6 +111,9 @@ int main(void)
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);//1MHz，对应数字部分高通
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_1);//480kHz，对应模拟部分
   HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);//600kHz，对应数字部分低通
+  
+  TLV_DAC_Init();
+  TLV_DAC_Output( DAC_CH1 , 1.1f );
   /* USER CODE END 2 */
 
   /* Init scheduler */
