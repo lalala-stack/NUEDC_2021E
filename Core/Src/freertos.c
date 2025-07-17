@@ -47,6 +47,7 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 volatile uint32_t last_valid_time = 0; 
+uint8_t display_flag = 0;
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
 osThreadId_t defaultTaskHandle;
@@ -163,12 +164,15 @@ void StartTask02(void *argument)
     
     // 
     if ((current_time - last_valid_time) > TIMEOUT_MS) {
-        //
-        TM1637_display(21, 21, 21, 21, 0);  // ��ʾȫ��
-    } else {
-        //
-        TM1637_display(mapped[0], mapped[1], mapped[2], mapped[3], 0);
-    }
+		display_flag = 0;
+    } 
+	
+	if( display_flag ){
+		TM1637_display(mapped[0], mapped[1], mapped[2], mapped[3], 0);
+	}
+	else{
+		TM1637_display(21, 21, 21, 21, 0); 
+	}
 	
 ////    osDelay(1);
   }
@@ -189,6 +193,7 @@ void StartTask03(void *argument)
   for(;;)
   {
 	if( tim2_ready ){
+		display_flag = 1;
 		last_valid_time = osKernelGetTickCount();
 		process_bit(signal_flag);
 		tim2_ready = 0;
