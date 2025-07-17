@@ -193,11 +193,12 @@ void TIM5_IRQHandler(void)
 	  if(freq >= 200) signal_flag = 1;
 	  else if( freq < 200 ) signal_flag = 0;
 	  tim2_ready = 1;
+	  TIM2->CNT = 0;
   }
   printf(  "%d\n " , signal_flag  );
   last_freq = freq;
   
-  TIM2->CNT = 0;
+  
   /* USER CODE END TIM5_IRQn 0 */
   HAL_TIM_IRQHandler(&htim5);
   /* USER CODE BEGIN TIM5_IRQn 1 */
